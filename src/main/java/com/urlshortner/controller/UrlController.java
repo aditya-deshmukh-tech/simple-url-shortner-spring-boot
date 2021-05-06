@@ -27,7 +27,7 @@ public class UrlController {
 	@PostMapping("/create")
 	public ResponseEntity createUrl(@RequestBody LinkModel m) {
 		String j = shorter.addToDatabase(m.getFulllink());
-		return ResponseEntity.ok("http://localhost:8080/url.short/"+j);
+		return ResponseEntity.ok("http://localhost:8086/url.short/"+j);
 	}
 	
 	@GetMapping("/{url}")
