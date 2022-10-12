@@ -2,7 +2,6 @@ package com.urlshortner.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,13 @@ import com.urlshortner.service.ShortService;
 @RestController
 @RequestMapping("/url.short")
 public class UrlController {
-	
-	@Autowired
+
 	private ShortService shorter;
+
+	@Autowired
+	public void setShorter(ShortService shorter) {
+		this.shorter = shorter;
+	}
 
 	@PostMapping("/create")
 	public ResponseEntity createUrl(@RequestBody LinkModel m) {

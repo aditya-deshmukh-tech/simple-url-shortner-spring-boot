@@ -1,7 +1,5 @@
 package com.urlshortner.service;
 
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
