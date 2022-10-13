@@ -51,8 +51,8 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
                 if (refreshToken != null && refreshToken.equals("true") && requestURL.contains("refreshtoken")) {
                     authenticateForRefreshToken(e, request);
                 } else {
-                   // request.setAttribute("exception", e);
-                    throw new UrlShortException("JWT Token has expired", e.getMessage(), 401);
+                    //request.setAttribute("exception", e.getMessage());
+                    logger.warn(e.getMessage());
                 }
             }
         } else {
@@ -68,8 +68,8 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             } else {
-                CustomUrlShortAuthentication customAuthentication = new CustomUrlShortAuthentication(null);
-                SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
 
@@ -109,15 +109,13 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
     private void authenticateForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
 
         // create a UsernamePasswordAuthenticationToken with null values.
-        // UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
+         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
         // After setting the Authentication in the context, we specify
         // that the current user is authenticated. So it passes the
         // Spring Security Configurations successfully.
-        // SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         // Set the claims so that in controller we will be using it to create
         // new JWT
-        CustomUrlShortAuthentication customAuthentication = new CustomUrlShortAuthentication(null);
-        SecurityContextHolder.getContext().setAuthentication(customAuthentication);
         request.setAttribute("claims", ex.getClaims());
 
     }

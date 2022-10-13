@@ -70,6 +70,11 @@ public class JwtTokenUtil implements Serializable {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(dayValidity)
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
+       /*
+         // for millisecond validity
+       return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+ validity))
+                .signWith(SignatureAlgorithm.HS512, secret).compact(); */
     }
 
     public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
@@ -80,7 +85,11 @@ public class JwtTokenUtil implements Serializable {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(daysValidity)
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
-
+       /*
+         // for millisecond validity
+       return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+ refreshExpirationDays))
+                .signWith(SignatureAlgorithm.HS512, secret).compact(); */
     }
 
     //validate token
