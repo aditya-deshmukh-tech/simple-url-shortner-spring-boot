@@ -27,13 +27,6 @@ public class UrlShortUserDetailService implements UserDetailsService {
         return new User(userClient.getUsername(), userClient.getPassword(), getAuthorities(userClient.getRoles()));
     }
 
-    public UserDetails loadUserByUsernameAndPassword(String username, String password) {
-        UserClient userClient = userRepo.getUser(username);
-        if (userClient == null || !userClient.getPassword().equals(password)){
-            throw new UrlShortException("UnAuthorized", "username password not found or password not match", 401);
-        }
-        return new User(userClient.getUsername(), userClient.getPassword(), getAuthorities(userClient.getRoles()));
-    }
 
     public Set<GrantedAuthority> getAuthorities(List<String> roles) {
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -47,4 +40,5 @@ public class UrlShortUserDetailService implements UserDetailsService {
     public void setUserRepo(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
+
 }
