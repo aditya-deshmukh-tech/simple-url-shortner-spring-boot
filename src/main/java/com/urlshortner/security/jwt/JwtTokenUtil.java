@@ -23,8 +23,11 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.validity}")
     private int validity;
 
-    @Value("${jwt.expiredTokenValidity}")
+    @Value("${jwt.refreshTokenValidity}")
     private int refreshExpirationDays;
+
+    @Value("${jwt.expiredTokenValidity}")
+    private long expiredTokenValidity;
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -49,6 +52,12 @@ public class JwtTokenUtil implements Serializable {
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
+    }
+
+    // check if expired token is valid to get refresh token
+    public Boolean isExpiredTokenValid(String token) {
+        final Date expiration = getExpirationDateFromToken(token);
+        return (new Date().getTime() - expiration.getTime()) < expiredTokenValidity;
     }
 
     //generate token for user
