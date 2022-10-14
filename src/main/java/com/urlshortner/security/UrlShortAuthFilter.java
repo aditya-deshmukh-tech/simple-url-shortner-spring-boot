@@ -37,22 +37,24 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
         // JWT Token is in the form "Bearer token". Remove Bearer word and get
         // only the Token
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 logger.warn("Unable to get JWT Token");
-                throw new UrlShortException("Unable to get JWT Token", e.getMessage(), 400);
             } catch (ExpiredJwtException e) {
                 logger.warn("JWT Token has expired");
                 String refreshToken = request.getHeader("refreshToken");
                 String requestURL = request.getRequestURL().toString();
                 // allow for Refresh Token creation if following conditions are true.
-                if (refreshToken != null && refreshToken.equals("true") && requestURL.contains("refreshtoken")) {
-                    authenticateForRefreshToken(e, request);
+                boolean expiredTokenValid = jwtTokenUtil.isExpiredTokenValid(e.getClaims());
+                if (refreshToken != null && refreshToken.equals("true") && requestURL.contains("refreshtoken") && expiredTokenValid) {
+                    authenticateForRefreshToken(e, request, expiredTokenValid);
                 } else {
                     //request.setAttribute("exception", e.getMessage());
                     logger.warn(e.getMessage());
+                    authenticateForRefreshToken(e, request, expiredTokenValid);
                 }
             }
         } else {
@@ -106,7 +108,7 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
         return true;
     }
 
-    private void authenticateForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
+    private void authenticateForRefreshToken(ExpiredJwtException ex, HttpServletRequest request, boolean expiredTokenValidity) {
 
         // create a UsernamePasswordAuthenticationToken with null values.
          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
@@ -116,6 +118,7 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
          SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         // Set the claims so that in controller we will be using it to create
         // new JWT
+        request.setAttribute("expiredTokenValidity", expiredTokenValidity);
         request.setAttribute("claims", ex.getClaims());
 
     }

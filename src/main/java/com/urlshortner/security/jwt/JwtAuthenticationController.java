@@ -1,5 +1,6 @@
 package com.urlshortner.security.jwt;
 
+import com.urlshortner.exceptions.UrlShortException;
 import com.urlshortner.security.UrlShortUserDetailService;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,9 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
         // From the HttpRequest get the claims
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-
+        boolean expiredTokenValidity = (boolean) request.getAttribute("expiredTokenValidity");
+        if (!expiredTokenValidity)
+            throw new UrlShortException("expired token error", "token expiration time is greater than valid time please create new token using /authenticate", 403);
         Map<String, Object> expectedMap = getMapFromIoJsonWebTokenClaims(claims);
         String token = jwtTokenUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
         return ResponseEntity.ok(new JwtResponse(token));

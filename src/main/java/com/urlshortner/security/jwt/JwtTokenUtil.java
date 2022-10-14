@@ -3,6 +3,7 @@ package com.urlshortner.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.util.function.Function;
@@ -55,8 +56,8 @@ public class JwtTokenUtil implements Serializable {
     }
 
     // check if expired token is valid to get refresh token
-    public Boolean isExpiredTokenValid(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
+    public Boolean isExpiredTokenValid(Claims claims) {
+        final Date expiration = claims.getExpiration();
         return (new Date().getTime() - expiration.getTime()) < expiredTokenValidity;
     }
 
@@ -72,33 +73,37 @@ public class JwtTokenUtil implements Serializable {
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
+       /*
+        // for days validity
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, validity);
         Date dayValidity = c.getTime();
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(dayValidity)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
-        /*
+                .signWith(SignatureAlgorithm.HS512, secret).compact(); */
+
          // for millisecond validity
        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+ validity))
-                .signWith(SignatureAlgorithm.HS512, secret).compact(); */
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
+       /*
+        //for days validity
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, refreshExpirationDays);
         Date daysValidity = c.getTime();
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(daysValidity)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
-        /*
+                .signWith(SignatureAlgorithm.HS512, secret).compact(); */
+
          // for millisecond validity
        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+ refreshExpirationDays))
-                .signWith(SignatureAlgorithm.HS512, secret).compact(); */
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     //validate token
