@@ -45,7 +45,7 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/secure/register").hasAuthority("ADMIN")
-                .and().authorizeRequests().antMatchers("/url.short/**").hasAuthority("NORMAL")
+                .and().authorizeRequests().antMatchers("/url.short/*").hasAuthority("NORMAL")
                 .and().authorizeRequests().antMatchers("/").permitAll().and()
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
                 .anyRequest().authenticated().and()

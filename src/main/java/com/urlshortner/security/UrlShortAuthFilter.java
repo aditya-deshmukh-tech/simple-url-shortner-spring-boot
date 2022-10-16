@@ -1,6 +1,5 @@
 package com.urlshortner.security;
 
-import com.urlshortner.exceptions.UrlShortException;
 import com.urlshortner.security.jwt.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +57,11 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
                 }
             }
         } else {
+            //to check using needFilter method for urls to authenticate or not
             if (needFilter(request.getServletPath()) && authPass) {
+                //check if basicAuth token is present or not
                 if (requestTokenHeader != null) {
+                    //parsing and authenticating basicAuth token
                     logger.warn("JWT Token does not begin with Bearer String");
                     base64Token = new String(Base64.getDecoder().decode(requestTokenHeader.substring(6)));
                     String user = base64Token.split(":")[0];
@@ -70,6 +72,7 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             } else {
+                //customly setting authentication to true
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
@@ -100,6 +103,10 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /*
+    method for avoid authentication for perticular urls
+    returns only true or false
+     */
     public boolean needFilter(String path) {
         if (path.contains("/actuator") || path.contains("/swagger-ui.html") || path.contains("/webjars/springfox-swagger-ui") ||
                 path.contains("/swagger-resources") || path.contains("/v2") || path.contains("/authenticate")) {
@@ -108,6 +115,9 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
         return true;
     }
 
+    /*
+    customly setting authentication to true for refreshtoken
+     */
     private void authenticateForRefreshToken(ExpiredJwtException ex, HttpServletRequest request, boolean expiredTokenValidity) {
 
         // create a UsernamePasswordAuthenticationToken with null values.
