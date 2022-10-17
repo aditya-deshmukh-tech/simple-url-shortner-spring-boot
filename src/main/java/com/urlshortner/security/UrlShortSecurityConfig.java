@@ -81,4 +81,36 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
     public void setUrlShortAuthFilter(UrlShortAuthFilter urlShortAuthFilter) {
         this.urlShortAuthFilter = urlShortAuthFilter;
     }
+
+    /*
+    new way to configure security without using depricated WebSecurityConfigurerAdapter
+
+            @Bean
+            public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                    http
+                        .cors().and()
+                        .csrf().disable()
+                        .authorizeRequests().antMatchers("/secure/register").hasAuthority("ADMIN")
+                        .and().authorizeRequests().antMatchers("/url.short/*").hasAuthority("NORMAL")
+                        .and().authorizeRequests().antMatchers(PUBLIC_URLS).permitAll()
+                        .anyRequest().authenticated().and()
+                        .sessionManagement()
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                http.addFilterBefore(urlShortAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+                return http.build();
+            }
+
+            @Bean
+            public WebSecurityCustomizer webSecurityCustomizer() {
+                return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/webjars/**");
+            }
+
+        @Bean
+        public AuthenticationManager authenticationManager(
+                AuthenticationConfiguration authConfig) throws Exception {
+            return authConfig.getAuthenticationManager();
+        }
+
+     */
 }
