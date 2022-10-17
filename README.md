@@ -33,5 +33,5 @@ export jwt_secret=random jwt_validity=60000 jwt_refreshTokenValidity=60000 jwt_e
 
 Once environment variables set run jar using following command
 ```shell
-java -jar target/urlshortnerorcrm-0.0.1-SNAPSHOT.jar
+java -jar target/UrlShortner-0.0.1-SNAPSHOT.jar
 ```

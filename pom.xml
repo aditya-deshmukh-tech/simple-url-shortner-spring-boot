@@ -8,11 +8,11 @@
 		<version>2.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.megaProject</groupId>
-	<artifactId>urlshortnerorcrm</artifactId>
+	<groupId>com.urlshortner</groupId>
+	<artifactId>UrlShortner</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>urlshortnerorcrm</name>
-	<description>big project</description>
+	<name>UrlShortner</name>
+	<description>used to shorten urls</description>
 	<properties>
 		<java.version>1.8</java.version>
 		<log4j2.version>2.17.1</log4j2.version>
