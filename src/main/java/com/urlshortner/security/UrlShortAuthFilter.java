@@ -58,7 +58,9 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
             }
         } else {
             //to check using needFilter method for urls to authenticate or not
-            if (needFilter(request.getServletPath()) && authPass) {
+            // this code is required if mapping in security config does not work
+           // if (needFilter(request.getServletPath()) && authPass) {
+
                 //check if basicAuth token is present or not
                 if (requestTokenHeader != null) {
                     //parsing and authenticating basicAuth token
@@ -71,11 +73,13 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
-            } else {
+
+            // this code is required if mapping in security config does not work
+           /* } else {
                 //customly setting authentication to true
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(null, null, null);
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
+            } */
         }
 
         // Once we get the token validate it.
@@ -106,6 +110,7 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
     /*
     method for avoid authentication for perticular urls
     returns only true or false
+    this code is required if mapping in security config does not work
      */
     public boolean needFilter(String path) {
         if (path.contains("/actuator") || path.contains("/swagger-ui.html") || path.contains("/webjars/springfox-swagger-ui") ||

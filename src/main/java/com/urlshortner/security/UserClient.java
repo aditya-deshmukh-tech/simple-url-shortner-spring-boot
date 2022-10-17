@@ -15,6 +15,8 @@ public class UserClient implements Serializable {
         this.roles = roles;
     }
 
+    public UserClient() {}
+
     public String getUsername() {
         return username;
     }

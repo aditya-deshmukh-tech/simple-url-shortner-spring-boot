@@ -15,13 +15,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final String[] PUBLIC_URLS = {
+            "/authenticate",
+            "/actuator/**"
+    };
 
     private UrlShortUserDetailService urlShortUserDetailService;
 
@@ -46,8 +53,7 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/secure/register").hasAuthority("ADMIN")
                 .and().authorizeRequests().antMatchers("/url.short/*").hasAuthority("NORMAL")
-                .and().authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .and().authorizeRequests().antMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest().authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
