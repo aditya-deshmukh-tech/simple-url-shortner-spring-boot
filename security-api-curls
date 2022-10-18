@@ -1,0 +1,41 @@
+registration api----------------------
+curl --location --request POST 'http://localhost:8080/secure/register' \
+--header 'Authorization: Basic cm9vdDpyb290' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username" : "newuser",
+    "password" : "newuser",
+    "roles" : ["NORMAL"]
+}'
+--------------------------------------
+
+authenticate api----------------------
+curl --location --request POST 'http://localhost:8080/authenticate' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username" : "newuser",
+    "password" : "newuser"
+}'
+--------------------------------------
+
+refreshtoken api----------------------
+curl --location --request GET 'http://localhost:8080/refreshtoken' \
+--header 'refreshToken: true' \
+--header 'Authorization: Bearer jwt-token'
+--------------------------------------
+
+update api----------------------------
+curl --location --request PUT 'http://localhost:8080/secure/update' \
+--header 'Authorization: Basic cm9vdDpyb290' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username" : "newuser",
+    "password" : "newuser",
+    "roles" : ["NORMAL", "ADMIN"]
+}'
+--------------------------------------
+
+delete api----------------------------
+curl --location --request DELETE 'http://localhost:8080/secure/delete/newuser' \
+--header 'Authorization: Basic cm9vdDpyb290'
+--------------------------------------

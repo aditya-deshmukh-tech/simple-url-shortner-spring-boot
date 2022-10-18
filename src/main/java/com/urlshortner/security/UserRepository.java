@@ -13,11 +13,20 @@ public class UserRepository {
         repo.put(userClient.getUsername(), userClient);
     }
 
+    public UserClient update(UserClient userClient) {
+        repo.put(userClient.getUsername(), userClient);
+        return repo.get(userClient.getUsername());
+    }
+
     public UserClient getUser(String username) {
         return repo.get(username);
     }
 
     public boolean existsById(String username) {
         return repo.containsKey(username);
+    }
+
+    public void deleteUser(String username) {
+        repo.remove(username);
     }
 }
