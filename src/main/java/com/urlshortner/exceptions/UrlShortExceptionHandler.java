@@ -28,6 +28,7 @@ public class UrlShortExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getErrorCode()));
     }
 
+
     @ExceptionHandler(Exception.class)
     @CrossOrigin(origins = "*")
     public final ResponseEntity<ErrorResponse> handleException(Exception exception) {

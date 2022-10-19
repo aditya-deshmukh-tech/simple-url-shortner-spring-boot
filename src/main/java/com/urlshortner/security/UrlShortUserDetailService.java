@@ -1,12 +1,12 @@
 package com.urlshortner.security;
 
-import com.urlshortner.exceptions.UrlShortException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -22,7 +22,7 @@ public class UrlShortUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         UserClient userClient = userRepo.getUser(username);
         if (userClient == null){
-            throw new UrlShortException("UnAuthorized", "username password not found", 401);
+            throw new UsernameNotFoundException("no user found with username "+username);
         }
         return new User(userClient.getUsername(), userClient.getPassword(), getAuthorities(userClient.getRoles()));
     }
