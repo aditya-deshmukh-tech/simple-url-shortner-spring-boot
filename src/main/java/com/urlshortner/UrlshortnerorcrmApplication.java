@@ -13,7 +13,6 @@ public class UrlshortnerorcrmApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UrlshortnerorcrmApplication.class, args);
-		UserRepository.repo.put("root", new UserClient("root", "root", Arrays.asList("NORMAL","ADMIN")));
 	}
 
 }

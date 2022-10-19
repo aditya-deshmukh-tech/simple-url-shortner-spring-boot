@@ -7,8 +7,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +20,8 @@ import java.util.Set;
 public class UrlShortUserDetailService implements UserDetailsService {
 
     private UserRepository userRepo;
+
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -41,4 +46,14 @@ public class UrlShortUserDetailService implements UserDetailsService {
         this.userRepo = userRepo;
     }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostConstruct
+    public void addRootUser() {
+        UserRepository.repo.put("root", new UserClient("root", passwordEncoder.encode("root"), Arrays.asList("NORMAL","ADMIN")));
+        System.out.println("user added");
+    }
 }
