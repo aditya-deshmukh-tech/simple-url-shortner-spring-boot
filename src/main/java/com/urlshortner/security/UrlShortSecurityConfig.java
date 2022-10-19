@@ -40,6 +40,8 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    private UrlShortAuthenticationEntryPoint urlShortAuthenticationEntryPoint;
+
 
     @Bean
     public PasswordEncoder getPassWordEncoder(){
@@ -56,7 +58,8 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers(PUBLIC_URLS).permitAll()
                 .anyRequest().authenticated().and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().exceptionHandling().authenticationEntryPoint(urlShortAuthenticationEntryPoint);
         http.addFilterBefore(urlShortAuthFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -80,6 +83,11 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setUrlShortAuthFilter(UrlShortAuthFilter urlShortAuthFilter) {
         this.urlShortAuthFilter = urlShortAuthFilter;
+    }
+
+    @Autowired
+    public void setUrlShortAuthenticationEntryPoint(UrlShortAuthenticationEntryPoint urlShortAuthenticationEntryPoint) {
+        this.urlShortAuthenticationEntryPoint = urlShortAuthenticationEntryPoint;
     }
 
     /*
