@@ -35,3 +35,5 @@ Once environment variables set run jar using following command
 ```shell
 java -jar target/UrlShortner-0.0.1-SNAPSHOT.jar
 ```
+## Security APIs
+For security apis you can use `security-api-curls` file where all curls command are present for each security api
