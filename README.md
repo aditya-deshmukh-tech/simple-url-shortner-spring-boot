@@ -8,6 +8,8 @@ This application takes input url and save it to hashmap and gives back shorten u
 
 ## Data Structures Used
 1. HashMap
+2. HashSet
+3. ArrayList
 
 ## How to install
 To clone repository use following command
