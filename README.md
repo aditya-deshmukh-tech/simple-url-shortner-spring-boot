@@ -9,7 +9,7 @@ This application takes input url and save it to hashmap and gives back shorten u
 ## Data Structures Used
 1. HashMap
 
-## How to install and use
+## How to install
 To clone repository use following command
 ```shell
 git clone https://github.com/aditya-deshmukh-tech/simple-url-shortner-spring-boot.git
@@ -19,7 +19,7 @@ once cloned create jar of project
 ```shell
 mvn clean install -DskipTests
 ```
-
+## Environment variables 
 This project requires 4 environment variables export them using following commands
 1. jwt_secret = for hashing of jwt
 2. jwt_validity = for validity of jwt token
@@ -30,7 +30,7 @@ validities should be mentioned in milliseconds as default
 ```shell
 export jwt_secret=random jwt_validity=60000 jwt_refreshTokenValidity=60000 jwt_expiredTokenValidity=120000
 ```
-
+## Run the project
 Once environment variables set run jar using following command
 ```shell
 java -jar target/UrlShortner-0.0.1-SNAPSHOT.jar
