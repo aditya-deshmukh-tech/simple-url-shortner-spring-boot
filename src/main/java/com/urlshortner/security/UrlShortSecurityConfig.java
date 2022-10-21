@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @Configuration
@@ -73,6 +74,12 @@ public class UrlShortSecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @PostConstruct
+    public void addRootUser() {
+        UserRepository.repo.put("root", new UserClient("root", getPassWordEncoder().encode("root"), Arrays.asList("NORMAL","ADMIN")));
+        System.out.println("user added");
     }
 
     @Autowired
