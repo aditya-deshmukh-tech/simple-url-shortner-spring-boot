@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,6 +24,8 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
 
     private UrlShortUserDetailService urlShortUserDetailService;
+
+    private PasswordEncoder passwordEncoder;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -67,9 +70,9 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
                     logger.warn("JWT Token does not begin with Bearer String");
                     base64Token = new String(Base64.getDecoder().decode(requestTokenHeader.substring(6)));
                     String user = base64Token.split(":")[0];
+                    String password = base64Token.split(":")[1];
                     UserDetails userDetails = urlShortUserDetailService.loadUserByUsername(user);
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = authenticateViaPassword(password, userDetails);
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
@@ -138,6 +141,14 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
 
     }
 
+    private UsernamePasswordAuthenticationToken authenticateViaPassword(String plainPassword, UserDetails userDetails) {
+        if (passwordEncoder.matches(plainPassword, userDetails.getPassword())) {
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        } else {
+            return new UsernamePasswordAuthenticationToken(null,null);
+        }
+    }
+
     @Autowired
     public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
@@ -145,5 +156,10 @@ public class UrlShortAuthFilter extends OncePerRequestFilter {
     @Autowired
     public void setUrlShortUserDetailService(UrlShortUserDetailService urlShortUserDetailService) {
         this.urlShortUserDetailService = urlShortUserDetailService;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }
